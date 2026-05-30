@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard — Create Vyral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css"/>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <a href="index.html" class="sb-logo">
+        <span class="dot"></span> Create Vyral
+      </a>
+      <div class="sb-plan-badge" id="sbPlanBadge">
+        <span class="spb-icon" id="sbPlanIcon">🚀</span>
+        <span class="spb-name" id="sbPlanName">GROWTH</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <a href="#" class="sb-link active" data-section="overview">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </a>
+      <a href="#" class="sb-link" data-section="videos">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Videos
+        <span class="sb-badge" id="videoBadge"></span>
+      </a>
+      <a href="#" class="sb-link" data-section="finances">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Finances
+      </a>
+      <a href="#" class="sb-link" data-section="deals">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Brand Deals
+        <span class="sb-badge" id="dealBadge"></span>
+      </a>
+      <a href="#" class="sb-link" data-section="contracts">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Contracts
+        <span class="sb-badge" id="contractBadge"></span>
+      </a>
+      <a href="#" class="sb-link" data-section="analytics">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+        Analytics
+        <span class="sb-meta-badge" id="metaBadge" style="display:none">Meta ✓</span>
+      </a>
+      <div class="sb-divider"></div>
+      <div class="sb-section-label mono">AI TOOLS</div>
+      <a href="voice-forge.html" class="sb-link sb-vf-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        CV Voice Forge
+        <span class="sb-ai-badge">AI</span>
+      </a>
+      <div class="sb-divider"></div>
+      <a href="#" class="sb-link" data-section="settings">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sb-bottom">
+      <div class="sb-user" id="sbUser">
+        <div class="sb-avatar" id="sbAvatar">A</div>
+        <div class="sb-user-info">
+          <div class="sb-name" id="sbName">Creator</div>
+          <div class="sb-email mono" id="sbEmail">Loading...</div>
+        </div>
+      </div>
+      <button class="sb-logout" id="logoutBtn" title="Log Out">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="sb-logout-label">Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main" id="mainArea">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title" id="topbarTitle">Overview</div>
+      <div class="topbar-right">
+        <button class="notif-btn" id="notifBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot" id="notifDot" style="display:none"></span>
+        </button>
+        <div class="tb-avatar" id="tbAvatar">A</div>
+      </div>
+    </header>
+
+    <!-- Notification Panel -->
+    <div class="notif-panel hidden" id="notifPanel">
+      <div class="np-head">
+        <span>Notifications</span>
+        <button class="np-mark-all" id="markAllRead">Mark all read</button>
+      </div>
+      <div class="np-list" id="notifList"></div>
+    </div>
+
+    <!-- ════════ SECTION: OVERVIEW ════════ -->
+    <section class="dash-section active" id="sec-overview">
+      <div class="section-inner">
+        <div class="welcome-banner" id="welcomeBanner">
+          <div class="wb-text">
+            <span class="wb-eyebrow">Create Vyral · Creator Dashboard</span>
+            <div class="wb-hi" id="wbHi">Good morning, <em id="wbName">Creator</em> 👋</div>
+            <div class="wb-sub" id="wbSub">Here's your creator dashboard for today.</div>
+          </div>
+          <div class="wb-plan" id="wbPlan">GROWTH</div>
+        </div>
+
+        <!-- Stat Cards -->
+        <div class="stat-grid" id="statGrid">
+          <div class="stat-card">
+            <div class="sc-icon">🎬</div>
+            <div class="sc-body">
+              <div class="sc-label mono">Videos This Month</div>
+              <div class="sc-value" id="statVideos">—</div>
+              <div class="sc-sub" id="statVideosSub">— delivered</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-icon">💼</div>
+            <div class="sc-body">
+              <div class="sc-label mono">Active Brand Deals</div>
+              <div class="sc-value" id="statDeals">—</div>
+              <div class="sc-sub" id="statDealsSub">— in negotiation</div>
+            </div>
+          </div>
+          <div class="stat-card accent-card">
+            <div class="sc-icon">₹</div>
+            <div class="sc-body">
+              <div class="sc-label mono">Earnings This Month</div>
+              <div class="sc-value" id="statEarnings">—</div>
+              <div class="sc-sub" id="statEarningsSub">from active deals</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-icon">🧾</div>
+            <div class="sc-body">
+              <div class="sc-label mono">Tax Filing Status</div>
+              <div class="sc-value" id="statTax">—</div>
+              <div class="sc-sub" id="statTaxSub">GST · ITR</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Voice Forge quick-access banner -->
+        <div class="vf-overview-banner" id="vfOverviewBanner">
+          <div class="vf-ob-top">
+            <span class="vf-ob-eyebrow mono">AI TOOLS · NEW</span>
+            <div class="vf-ob-title">🎙 CV Voice Forge is live</div>
+            <div class="vf-ob-sub">Generate speech, clone your voice &amp; dub videos with AI.</div>
+          </div>
+          <div class="vf-ob-bottom">
+            <div class="vf-ob-stats">
+              <div class="vf-ob-stat"><span id="vfObGens">0</span><label>Generations</label></div>
+              <div class="vf-ob-stat"><span id="vfObVoices">0</span><label>Voices</label></div>
+            </div>
+            <a href="voice-forge.html" class="vf-ob-cta">Open CV Voice Forge →</a>
+          </div>
+        </div>
+
+        <!-- Bottom row -->
+        <div class="overview-bottom">
+          <!-- Activity feed -->
+          <div class="ov-card">
+            <div class="ov-card-head">
+              <h3>Recent Activity</h3>
+            </div>
+            <div class="activity-list" id="activityList"></div>
+          </div>
+
+          <!-- Action items -->
+          <div class="ov-card">
+            <div class="ov-card-head">
+              <h3>Action Needed</h3>
+            </div>
+            <div class="action-list" id="actionList"></div>
+
+            <!-- Upcoming -->
+            <div class="ov-card-head" style="margin-top:24px;">
+              <h3>Your Team</h3>
+            </div>
+            <div class="team-list" id="teamList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: VIDEOS ════════ -->
+    <section class="dash-section" id="sec-videos">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">01 · Video Editing</span>
+            <h2 class="section-title">Editing Queue</h2>
+            <p class="section-desc" id="videoSectionDesc">Your editing queue and delivery tracker.</p>
+          </div>
+          <button class="btn-accent" id="requestVideoBtn">+ Request New Video</button>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="videos-progress" id="videosProgress"></div>
+
+        <!-- Queue -->
+        <div class="table-card">
+          <div class="tc-head">
+            <h3>Editing Queue</h3>
+            <div class="tc-filters" id="videoFilters">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="In Queue">In Queue</button>
+              <button class="filter-btn" data-filter="In Editing">Editing</button>
+              <button class="filter-btn" data-filter="Review Needed">Review</button>
+              <button class="filter-btn" data-filter="Delivered">Delivered</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="videosTable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Platform</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                  <th>Editor</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="videosTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: FINANCES ════════ -->
+    <section class="dash-section" id="sec-finances">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">02 · CA & Tax</span>
+            <h2 class="section-title">Finances</h2>
+            <p class="section-desc">Your CA-managed tax filings, TDS, and earnings.</p>
+          </div>
+        </div>
+
+        <!-- Finance cards row -->
+        <div class="finance-cards" id="financeCards"></div>
+
+        <!-- Earnings breakdown + TDS -->
+        <div class="finance-bottom">
+          <div class="table-card">
+            <div class="tc-head"><h3>Earnings Breakdown</h3></div>
+            <div class="earnings-chart" id="earningsChart"></div>
+            <div class="earnings-table" id="earningsTable"></div>
+          </div>
+          <div class="table-card">
+            <div class="tc-head"><h3>TDS Summary</h3></div>
+            <div class="tds-block" id="tdsBlock"></div>
+            <div class="tc-head" style="margin-top:24px;"><h3>Investments</h3></div>
+            <div class="invest-block" id="investBlock"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: BRAND DEALS ════════ -->
+    <section class="dash-section" id="sec-deals">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">03 · Brand Deals</span>
+            <h2 class="section-title">Collaborations</h2>
+            <p class="section-desc">Your active deals, pipeline, and completed collaborations.</p>
+          </div>
+        </div>
+
+        <!-- Deal cards -->
+        <div class="deals-cards" id="dealsCards"></div>
+
+        <!-- Deals table -->
+        <div class="table-card" style="margin-top:24px;">
+          <div class="tc-head">
+            <h3>All Collaborations</h3>
+            <div class="tc-filters" id="dealFilters">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="Active">Active</button>
+              <button class="filter-btn" data-filter="Negotiating">Negotiating</button>
+              <button class="filter-btn" data-filter="Contract Review">Contract Review</button>
+              <button class="filter-btn" data-filter="Completed">Completed</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table" id="dealsTable">
+              <thead>
+                <tr>
+                  <th>Brand</th>
+                  <th>Niche</th>
+                  <th>Value</th>
+                  <th>Deliverables</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                </tr>
+              </thead>
+              <tbody id="dealsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: CONTRACTS ════════ -->
+    <section class="dash-section" id="sec-contracts">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">04 · Legal</span>
+            <h2 class="section-title">Contracts</h2>
+            <p class="section-desc">Every contract reviewed by the Create Vyral legal team before you sign.</p>
+          </div>
+        </div>
+        <div class="contracts-list" id="contractsList"></div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: ANALYTICS ════════ -->
+    <section class="dash-section" id="sec-analytics">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">04 · Meta Graph API</span>
+            <h2 class="section-title">Analytics</h2>
+            <p class="section-desc">Connect your Instagram or Facebook account to get verified metrics brands can trust.</p>
+          </div>
+          <div id="analyticsSyncBtn" style="display:none">
+            <button class="btn-accent" id="syncMetaBtn">↻ Sync Now</button>
+          </div>
+        </div>
+
+        <!-- Dynamic content rendered by JS -->
+        <div id="analyticsContent"></div>
+      </div>
+    </section>
+
+    <!-- ════════ SECTION: SETTINGS ════════ -->
+    <section class="dash-section" id="sec-settings">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow">05 · Account</span>
+            <h2 class="section-title">Settings</h2>
+            <p class="section-desc">Manage your profile, plan, and account details.</p>
+          </div>
+        </div>
+        <div class="settings-grid">
+          <!-- Profile card -->
+          <div class="settings-card">
+            <h3 class="sc-title">Profile Information</h3>
+            <form id="profileForm">
+              <div class="field"><label>Full Name</label><input type="text" id="st-name" placeholder="Your name"/></div>
+              <div class="field"><label>Email Address</label><input type="email" id="st-email" placeholder="Email" disabled/></div>
+              <div class="field"><label>Platform</label>
+                <select id="st-platform">
+                  <option>YouTube</option>
+                  <option>Instagram</option>
+                  <option>YouTube + Instagram</option>
+                  <option>Moj / Josh</option>
+                  <option>Multiple Platforms</option>
+                </select>
+              </div>
+              <div class="field"><label>Language</label>
+                <select id="st-language">
+                  <option>Tamil</option><option>Telugu</option><option>Kannada</option><option>Malayalam</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-accent" style="margin-top:8px;">Save Changes</button>
+            </form>
+            <div class="save-msg" id="profileSaveMsg"></div>
+          </div>
+
+          <!-- Plan card -->
+          <div class="settings-card">
+            <h3 class="sc-title">Your Plan</h3>
+            <div class="plan-display" id="planDisplay"></div>
+            <div class="plan-features-list" id="planFeaturesList"></div>
+            <div class="upgrade-cta">
+              <p>Want more features? Upgrade your plan anytime.</p>
+              <a href="index.html#pricing" class="btn-accent-outline">View All Plans →</a>
+            </div>
+          </div>
+
+          <!-- Add-ons card -->
+          <div class="settings-card">
+            <h3 class="sc-title">Add-Ons</h3>
+            <div class="addons-settings">
+              <div class="addon-row">
+                <div><strong>Health Insurance</strong><span>₹1,500/month</span></div>
+                <button class="addon-toggle" data-addon="health">Add</button>
+              </div>
+              <div class="addon-row">
+                <div><strong>Gear Loan</strong><span>₹2,000/month</span></div>
+                <button class="addon-toggle" data-addon="gear">Add</button>
+              </div>
+              <div class="addon-row">
+                <div><strong>Extra Contract Review</strong><span>₹1,500/review</span></div>
+                <button class="addon-toggle" data-addon="contract">Request</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger zone -->
+          <div class="settings-card danger-card">
+            <h3 class="sc-title">Account</h3>
+            <div class="account-actions">
+              <div>
+                <strong>Sign Out</strong>
+                <p>You'll be taken back to the homepage.</p>
+              </div>
+              <button class="btn-danger" id="settingsLogout">Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ════════ META CONNECT MODAL ════════ -->
+<div class="modal-overlay hidden" id="metaConnectModal">
+  <div class="modal-box meta-modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="meta-modal-eyebrow mono">Meta Graph API · OAuth 2.0</div>
+        <h3>Connect Instagram Account</h3>
+      </div>
+      <button class="modal-close-btn" id="metaConnectClose">✕</button>
+    </div>
+
+    <!-- Step 1: Permissions overview -->
+    <div id="metaStep1">
+      <div class="meta-oauth-card">
+        <div class="meta-oauth-logo">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#igGrad)"/><path d="M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-8.6a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z" fill="#fff"/></svg>
+        </div>
+        <div class="meta-oauth-text">
+          <div class="meta-oauth-title">Instagram Creator / Business Account</div>
+          <div class="meta-oauth-sub">Create Vyral is requesting read-only access to your analytics</div>
+        </div>
+      </div>
+
+      <div class="meta-perms-list">
+        <div class="meta-perm-item">
+          <span class="meta-perm-icon">✓</span>
+          <div>
+            <div class="meta-perm-name">instagram_basic</div>
+            <div class="meta-perm-desc">Read profile info, follower count and post list</div>
+          </div>
+        </div>
+        <div class="meta-perm-item">
+          <span class="meta-perm-icon">✓</span>
+          <div>
+            <div class="meta-perm-name">instagram_manage_insights</div>
+            <div class="meta-perm-desc">Reach, impressions, engagement, audience demographics</div>
+          </div>
+        </div>
+        <div class="meta-perm-item">
+          <span class="meta-perm-icon">✓</span>
+          <div>
+            <div class="meta-perm-name">pages_show_list</div>
+            <div class="meta-perm-desc">Access connected Facebook Page for cross-platform data</div>
+          </div>
+        </div>
+        <div class="meta-perm-item">
+          <span class="meta-perm-icon lock">🔒</span>
+          <div>
+            <div class="meta-perm-name">Read-only • No posting access</div>
+            <div class="meta-perm-desc">Create Vyral can never post, DM, or modify your account</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-oauth-url-box">
+        <div class="meta-url-label mono">OAuth Redirect URL</div>
+        <div class="meta-url-text mono">https://www.facebook.com/v18.0/dialog/oauth?client_id=APP_ID&amp;redirect_uri=createvyral.buzz/oauth/callback&amp;scope=instagram_basic,instagram_manage_insights,pages_show_list&amp;response_type=code</div>
+      </div>
+
+      <div class="meta-modal-note">In production, clicking below redirects you to Meta's login page. For this demo, we'll simulate the connection with realistic data.</div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" id="metaConnectCancel">Cancel</button>
+        <button class="btn-meta-connect" id="metaSimulateConnect">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig2)"/><path d="M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zm5.2-8.6a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z" fill="#fff"/></svg>
+          Continue with Instagram
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Connecting animation -->
+    <div id="metaStep2" class="hidden">
+      <div class="meta-connecting">
+        <div class="meta-connecting-anim">
+          <div class="meta-conn-dot"></div>
+          <div class="meta-conn-dot"></div>
+          <div class="meta-conn-dot"></div>
+        </div>
+        <div class="meta-connecting-text">Fetching analytics from Meta Graph API…</div>
+        <div class="meta-connecting-steps" id="metaConnSteps">
+          <div class="mcs-item" id="mcs1">⟳ Authenticating with Meta OAuth 2.0</div>
+          <div class="mcs-item" id="mcs2">⟳ Fetching account profile &amp; followers</div>
+          <div class="mcs-item" id="mcs3">⟳ Loading reach &amp; impression data (30 days)</div>
+          <div class="mcs-item" id="mcs4">⟳ Pulling audience demographics</div>
+          <div class="mcs-item" id="mcs5">⟳ Syncing top content performance</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ META DISCONNECT CONFIRM ════════ -->
+<div class="modal-overlay hidden" id="metaDisconnectModal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Disconnect Instagram?</h3>
+      <button class="modal-close-btn" id="metaDisconnectClose">✕</button>
+    </div>
+    <p style="color:var(--text-dim);font-size:14px;line-height:1.6;margin-bottom:20px;">This will remove your Meta connection and analytics data from Create Vyral. Brands will no longer see verified metrics on your profile.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="metaDisconnectCancel">Keep Connected</button>
+      <button class="btn-danger" id="metaDisconnectConfirm">Yes, Disconnect</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ REQUEST VIDEO MODAL ════════ -->
+<div class="modal-overlay hidden" id="videoModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Request New Video Edit</h3>
+      <button class="modal-close-btn" id="videoModalClose">✕</button>
+    </div>
+    <form id="videoRequestForm">
+      <div class="field"><label>Video Title / Topic</label><input type="text" id="vm-title" placeholder="e.g. Day in My Life - Chennai" required/></div>
+      <div class="field"><label>Platform</label>
+        <select id="vm-platform" required>
+          <option value="">Select</option>
+          <option>YouTube</option>
+          <option>Instagram Reels</option>
+          <option>YouTube Shorts</option>
+          <option>Moj / Josh</option>
+        </select>
+      </div>
+      <div class="field"><label>Notes for Editor (Optional)</label><textarea id="vm-notes" rows="3" placeholder="Any specific style, music, text overlays..."></textarea></div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" id="videoModalCancel">Cancel</button>
+        <button type="submit" class="btn-accent">Add to Queue</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════ VIDEO DETAIL MODAL ════════ -->
+<div class="modal-overlay hidden" id="videoDetailModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="vdm-title">Video Details</h3>
+      <button class="modal-close-btn" id="videoDetailClose">✕</button>
+    </div>
+    <div id="vdm-content"></div>
+    <div class="modal-actions" id="vdm-actions"></div>
+  </div>
+</div>
+
+<!-- ════════ DEAL DETAIL MODAL ════════ -->
+<div class="modal-overlay hidden" id="dealDetailModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="ddm-brand">Brand Deal</h3>
+      <button class="modal-close-btn" id="dealDetailClose">✕</button>
+    </div>
+    <div id="ddm-content"></div>
+    <div class="modal-actions" id="ddm-actions"></div>
+  </div>
+</div>
+
+<!-- ════════ CONTRACT DETAIL MODAL ════════ -->
+<div class="modal-overlay hidden" id="contractDetailModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="cdm-brand">Contract Details</h3>
+      <button class="modal-close-btn" id="contractDetailClose">✕</button>
+    </div>
+    <div id="cdm-content"></div>
+    <div class="modal-actions" id="cdm-actions"></div>
+  </div>
+</div>
+
+<!-- ════════ CONTRACT SIGNING MODAL ════════ -->
+<div class="modal-overlay hidden" id="contractSignModal">
+  <div class="modal-box sign-modal-box">
+
+    <!-- Header -->
+    <div class="modal-header">
+      <div>
+        <div class="csm-eyebrow mono">Digital Agreement</div>
+        <h3 id="csm-title">Review & Sign Contract</h3>
+      </div>
+      <button class="modal-close-btn" id="contractSignClose">✕</button>
+    </div>
+
+    <!-- Generated Agreement Document (scrollable) -->
+    <div class="contract-doc-scroll" id="contractDocScroll">
+      <div id="contractDocContent"></div>
+    </div>
+
+    <!-- Scroll-to-bottom notice -->
+    <div class="cds-notice" id="cdsNotice">
+      ↓ Scroll down to read the full agreement before signing
+    </div>
+
+    <!-- Signature Area -->
+    <div class="sign-area">
+      <div class="sign-area-label">YOUR SIGNATURE</div>
+
+      <!-- Tab switcher -->
+      <div class="sign-tabs">
+        <button class="sign-tab active" id="stDraw">✍️ Draw</button>
+        <button class="sign-tab" id="stType">⌨️ Type</button>
+      </div>
+
+      <!-- Draw pad -->
+      <div class="sign-pad-wrap" id="signDrawWrap">
+        <canvas id="signatureCanvas" width="580" height="110"></canvas>
+        <div class="sign-pad-footer">
+          <span class="sign-pad-hint">Draw your signature with mouse or finger</span>
+          <button class="sign-clear-btn" id="clearSignature">Clear</button>
+        </div>
+      </div>
+
+      <!-- Type name -->
+      <div class="sign-type-wrap hidden" id="signTypeWrap">
+        <input type="text" id="signTypeName" class="sign-type-input" placeholder="Type your full legal name"/>
+        <div class="sign-typed-preview" id="signTypedPreview"></div>
+      </div>
+
+      <!-- Declaration -->
+      <label class="sign-declaration">
+        <input type="checkbox" id="signAgree"/>
+        <span>I have read and agree to the terms of this agreement. I confirm that my electronic signature is legally binding under the Information Technology Act, 2000 (India).</span>
+      </label>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="modal-actions sign-modal-actions">
+      <button class="btn-ghost" id="contractSignCancel">Cancel</button>
+      <button class="btn-accent" id="signAndConfirm" disabled>
+        <span id="signBtnText">Sign & Confirm Agreement</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ SIGNED CONFIRMATION MODAL ════════ -->
+<div class="modal-overlay hidden" id="signedConfirmModal">
+  <div class="modal-box">
+    <div class="sign-success">
+      <div class="ss-icon">✅</div>
+      <h3 class="ss-title">Agreement Signed!</h3>
+      <p class="ss-sub" id="ssSubText">Your contract has been digitally signed and stored.</p>
+      <div class="ss-meta" id="ssMeta"></div>
+      <div class="ss-sig-wrap">
+        <div class="ss-sig-label mono">Your Signature</div>
+        <div class="ss-sig-display" id="ssSignatureDisplay"></div>
+      </div>
+      <button class="btn-accent" style="width:100%;margin-top:20px;" id="signedConfirmClose">Done</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

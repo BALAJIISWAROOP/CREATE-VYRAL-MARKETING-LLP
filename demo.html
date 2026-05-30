@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Create Vyral — Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css"/>
+<style>
+/* ── Demo banner ── */
+.demo-ribbon {
+  position:fixed; top:0; left:0; right:0;
+  height:36px;
+  background: var(--accent);
+  color:#080808;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px; font-weight:600; letter-spacing:.18em;
+  text-transform:uppercase; z-index:9999;
+  gap:20px;
+}
+.demo-ribbon a {
+  background:#080808; color:var(--accent);
+  padding:3px 12px; border-radius:99px;
+  font-size:10px; font-weight:700;
+  text-decoration:none; letter-spacing:.08em;
+}
+.demo-ribbon a:hover { opacity:.85; }
+
+/* Push app down by ribbon height */
+.app { margin-top:36px; height:calc(100vh - 36px); }
+.sidebar { height:calc(100vh - 36px); }
+.dash-section { height:calc(100vh - 36px - 72px) !important; }
+
+/* Active section always visible in demo */
+.demo-section { display:block !important; }
+
+/* Tab nav */
+.demo-tabs {
+  display:flex; gap:0;
+  border-bottom:1px solid rgba(244,241,232,.08);
+  margin-bottom:0; padding:0 48px;
+  background:rgba(9,9,9,.95);
+  position:sticky; top:72px; z-index:30;
+}
+.demo-tab {
+  padding:14px 20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px; font-weight:600; letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(244,241,232,.35);
+  cursor:pointer; border-bottom:2px solid transparent;
+  transition:all .15s; background:none; border-top:none;
+  border-left:none; border-right:none;
+}
+.demo-tab:hover { color:rgba(244,241,232,.7); }
+.demo-tab.active {
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+
+/* Demo section panels */
+.demo-panel { display:none; }
+.demo-panel.active { display:block; }
+
+/* Chart bar visual */
+.chart-bar-visual {
+  display:flex; align-items:flex-end; gap:8px;
+  height:100px; padding:0 0 12px;
+}
+.cb { flex:1; border-radius:4px 4px 0 0; background:rgba(197,255,62,.15); min-height:10px; }
+.cb.hi { background:var(--accent); }
+
+/* Pill filter active */
+.filter-btn.active {
+  background:rgba(197,255,62,.1);
+  border-color:rgba(197,255,62,.3);
+  color:var(--accent);
+}
+
+/* Empty state */
+.empty-state {
+  text-align:center; padding:60px 20px;
+  color:rgba(244,241,232,.25);
+  font-size:13px; line-height:1.8;
+}
+.empty-state .es-icon { font-size:2.5rem; margin-bottom:12px; display:block; }
+.empty-state strong { display:block; font-family:'Syne',sans-serif; font-weight:700; font-size:17px; letter-spacing:-.02em; color:rgba(244,241,232,.4); margin-bottom:6px; }
+</style>
+</head>
+<body>
+
+<!-- Demo ribbon -->
+<div class="demo-ribbon">
+  <span>🎯 LIVE DEMO — No sign-in required</span>
+  <a href="index.html">View Landing Page</a>
+  <a href="auth.html">Get Started Free</a>
+</div>
+
+<div class="app" id="app">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <a href="index.html" class="sb-logo">
+        <span class="dot"></span> Create Vyral
+      </a>
+      <div class="sb-plan-badge">
+        <span class="spb-icon">🚀</span>
+        <span class="spb-name">GROWTH PLAN</span>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <a href="#" class="sb-link active" onclick="switchTab('overview',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </a>
+      <a href="#" class="sb-link" onclick="switchTab('videos',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+        Videos
+        <span class="sb-badge">6</span>
+      </a>
+      <a href="#" class="sb-link" onclick="switchTab('finances',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Finances
+      </a>
+      <a href="#" class="sb-link" onclick="switchTab('deals',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Brand Deals
+        <span class="sb-badge">3</span>
+      </a>
+      <a href="#" class="sb-link" onclick="switchTab('contracts',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Contracts
+        <span class="sb-badge">1</span>
+      </a>
+
+      <div class="sb-divider"></div>
+      <div class="sb-section-label mono">AI TOOLS</div>
+      <a href="voice-forge.html" class="sb-link sb-vf-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        CV Voice Forge
+        <span class="sb-ai-badge">AI</span>
+      </a>
+      <div class="sb-divider"></div>
+
+      <a href="#" class="sb-link" onclick="switchTab('settings',this)">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <div class="sb-bottom">
+      <div class="sb-avatar">RK</div>
+      <div class="sb-user">
+        <div class="sb-user-info">
+          <div class="sb-name">Rahul K.</div>
+          <div class="sb-email">demo@createvyral.com</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <div class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-title" id="topbarTitle">Overview</div>
+      <div class="topbar-right">
+        <button class="notif-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+        <div class="tb-avatar">RK</div>
+      </div>
+    </header>
+
+    <!-- ══ OVERVIEW ══ -->
+    <div class="dash-section demo-panel active" id="panel-overview">
+      <div class="section-inner">
+
+        <!-- Welcome banner -->
+        <div class="welcome-banner">
+          <div class="wb-text">
+            <span class="wb-eyebrow mono">CREATE VYRAL · LIVE DEMO</span>
+            <div class="wb-hi">Your growth,<br><em>at a glance.</em> 📊</div>
+            <div class="wb-sub">Everything you need to manage videos, deals, and earnings — in one place.</div>
+          </div>
+          <div class="wb-plan">GROWTH</div>
+        </div>
+
+        <!-- Stat grid -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="sc-body">
+              <span class="sc-label">Videos This Month</span>
+              <div class="sc-value">12</div>
+              <div class="sc-sub">8 delivered · 4 in editing</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-body">
+              <span class="sc-label">Active Brand Deals</span>
+              <div class="sc-value">3</div>
+              <div class="sc-sub">2 negotiating · 1 live</div>
+            </div>
+          </div>
+          <div class="stat-card accent-card">
+            <div class="sc-body">
+              <span class="sc-label">Earnings This Month</span>
+              <div class="sc-value">₹84K</div>
+              <div class="sc-sub">from active brand deals</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-body">
+              <span class="sc-label">Tax Filing Status</span>
+              <div class="sc-value">✓</div>
+              <div class="sc-sub">GST · ITR filed on time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CV Voice Forge banner -->
+        <div class="vf-overview-banner">
+          <div class="vf-ob-top">
+            <span class="vf-ob-eyebrow mono">AI TOOLS · NEW</span>
+            <div class="vf-ob-title">🎙 CV Voice Forge is live</div>
+            <div class="vf-ob-sub">Generate speech, clone your voice &amp; dub videos with AI.</div>
+          </div>
+          <div class="vf-ob-bottom">
+            <div class="vf-ob-stats">
+              <div class="vf-ob-stat"><span>47</span><label>Generations</label></div>
+              <div class="vf-ob-stat"><span>3</span><label>Voices</label></div>
+            </div>
+            <a href="voice-forge.html" class="vf-ob-cta">Open CV Voice Forge →</a>
+          </div>
+        </div>
+
+        <!-- Bottom cards -->
+        <div class="overview-bottom">
+          <div class="ov-card">
+            <div class="ov-card-head">
+              <h3>Recent Activity</h3>
+            </div>
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="ai-icon">🎬</div>
+                <div>
+                  <div class="ai-msg">Video <strong>"Diwali Gift Ideas 2025"</strong> delivered</div>
+                  <div class="ai-time">2 hours ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="ai-icon">🤝</div>
+                <div>
+                  <div class="ai-msg">New brand deal from <strong>Mamaearth</strong> — ₹45,000</div>
+                  <div class="ai-time">Yesterday</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="ai-icon">📝</div>
+                <div>
+                  <div class="ai-msg">Contract signed with <strong>boAt Lifestyle</strong></div>
+                  <div class="ai-time">2 days ago</div>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="ai-icon">💰</div>
+                <div>
+                  <div class="ai-msg">Payment of <strong>₹38,000</strong> received from Sugar Cosmetics</div>
+                  <div class="ai-time">3 days ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ov-card">
+            <div class="ov-card-head">
+              <h3>Action Needed</h3>
+            </div>
+            <div class="action-list">
+              <div class="action-item">
+                <div class="ai-icon">⚠️</div>
+                <div class="ai-msg">Review contract for <strong>Noise brand deal</strong></div>
+                <button class="action-btn">Review</button>
+              </div>
+              <div class="action-item all-clear">
+                <div class="ai-icon">✅</div>
+                <div class="ai-msg">GST filing for Oct 2025 complete</div>
+              </div>
+            </div>
+            <div style="margin-top:20px;">
+              <div class="ov-card-head">
+                <h3>Your Team</h3>
+              </div>
+              <div class="team-list">
+                <div class="team-item">
+                  <div class="team-avatar">AK</div>
+                  <div class="team-info">
+                    <div class="team-name">Arun Kumar</div>
+                    <div class="team-role">Video Editor</div>
+                  </div>
+                  <div class="team-status"></div>
+                </div>
+                <div class="team-item">
+                  <div class="team-avatar">PM</div>
+                  <div class="team-info">
+                    <div class="team-name">Preethi M.</div>
+                    <div class="team-role">CA &amp; Tax</div>
+                  </div>
+                  <div class="team-status"></div>
+                </div>
+                <div class="team-item">
+                  <div class="team-avatar">SS</div>
+                  <div class="team-info">
+                    <div class="team-name">Sundar S.</div>
+                    <div class="team-role">Brand Deals</div>
+                  </div>
+                  <div class="team-status"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══ VIDEOS ══ -->
+    <div class="dash-section demo-panel" id="panel-videos">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow mono">01 · VIDEO EDITING</span>
+            <h1 class="section-title">Editing Queue</h1>
+            <p class="section-desc">Your editing queue and delivery tracker.</p>
+          </div>
+          <button class="btn-accent">+ Request New Video</button>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="videos-progress" style="margin-bottom:24px;">
+          <div class="vp-item"><div class="vp-dot green"></div><span class="vp-label">Delivered</span><strong class="vp-count" style="margin-left:6px">8</strong></div>
+          <div class="vp-item"><div class="vp-dot blue"></div><span class="vp-label">In Editing</span><strong class="vp-count" style="margin-left:6px">3</strong></div>
+          <div class="vp-item"><div class="vp-dot amber"></div><span class="vp-label">In Review</span><strong class="vp-count" style="margin-left:6px">1</strong></div>
+          <div class="vp-bar-wrap"><div class="vp-bar"><div class="vp-fill" style="width:67%"></div></div></div>
+          <span class="mono" style="color:var(--accent);font-size:11px;">67% COMPLETE</span>
+        </div>
+
+        <div class="table-card">
+          <div class="tc-head">
+            <h3>Editing Queue</h3>
+            <div class="tc-filters">
+              <button class="filter-btn active">All</button>
+              <button class="filter-btn">In Queue</button>
+              <button class="filter-btn">Editing</button>
+              <button class="filter-btn">Review</button>
+              <button class="filter-btn">Delivered</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr>
+                <th>Title</th><th>Platform</th><th>Status</th><th>Due Date</th><th>Editor</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td class="td-title">Diwali Gift Ideas 2025 — Full Haul</td>
+                  <td>YouTube</td>
+                  <td><span class="badge badge-green">Delivered</span></td>
+                  <td>Oct 28</td>
+                  <td>Arun K.</td>
+                </tr>
+                <tr>
+                  <td class="td-title">Morning Routine with Skincare ft. Mamaearth</td>
+                  <td>Instagram Reel</td>
+                  <td><span class="badge badge-blue">Editing</span></td>
+                  <td>Nov 2</td>
+                  <td>Arun K.</td>
+                </tr>
+                <tr>
+                  <td class="td-title">Honest Review: boAt Airdopes 141</td>
+                  <td>YouTube</td>
+                  <td><span class="badge badge-amber">Review</span></td>
+                  <td>Nov 4</td>
+                  <td>Arun K.</td>
+                </tr>
+                <tr>
+                  <td class="td-title">Top 10 Budget Gadgets Under ₹500</td>
+                  <td>YouTube Shorts</td>
+                  <td><span class="badge badge-gray">In Queue</span></td>
+                  <td>Nov 7</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td class="td-title">Navratri Look: Sugar Cosmetics Collaboration</td>
+                  <td>Instagram Reel</td>
+                  <td><span class="badge badge-green">Delivered</span></td>
+                  <td>Oct 22</td>
+                  <td>Arun K.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ FINANCES ══ -->
+    <div class="dash-section demo-panel" id="panel-finances">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow mono">02 · CA &amp; TAX</span>
+            <h1 class="section-title">Finances</h1>
+            <p class="section-desc">Your CA-managed tax filings, TDS, and earnings.</p>
+          </div>
+        </div>
+
+        <div class="finance-cards">
+          <div class="fin-card">
+            <span class="fin-card-label">Total Earnings</span>
+            <div class="fin-card-title">This Financial Year</div>
+            <div class="fin-card-value">₹6.4L</div>
+            <div class="fin-card-sub">Apr 2025 – Nov 2025</div>
+          </div>
+          <div class="fin-card accent-card" style="background:rgba(197,255,62,.06);border-color:rgba(197,255,62,.2);">
+            <span class="fin-card-label">This Month</span>
+            <div class="fin-card-title">October Earnings</div>
+            <div class="fin-card-value" style="color:var(--accent)">₹84,000</div>
+            <div class="fin-card-sub">↑ 18% vs last month</div>
+          </div>
+          <div class="fin-card">
+            <span class="fin-card-label">TDS Deducted</span>
+            <div class="fin-card-title">Total Withheld</div>
+            <div class="fin-card-value">₹64,000</div>
+            <div class="fin-card-sub">10% at source</div>
+          </div>
+        </div>
+
+        <div class="finance-bottom">
+          <div class="ov-card">
+            <div class="ov-card-head">
+              <h3>Earnings Breakdown</h3>
+            </div>
+            <div class="earnings-chart">
+              <div class="chart-bar-visual">
+                <div class="cb" style="height:40%"></div>
+                <div class="cb" style="height:55%"></div>
+                <div class="cb" style="height:48%"></div>
+                <div class="cb" style="height:70%"></div>
+                <div class="cb" style="height:62%"></div>
+                <div class="cb" style="height:85%"></div>
+                <div class="cb hi" style="height:100%"></div>
+              </div>
+            </div>
+            <div class="earnings-table">
+              <div class="et-row"><div class="et-source"><div class="et-dot" style="background:var(--accent)"></div>Brand Deals</div><div class="et-amount">₹54,000</div></div>
+              <div class="et-row"><div class="et-source"><div class="et-dot" style="background:#60a5fa"></div>YouTube AdSense</div><div class="et-amount">₹18,400</div></div>
+              <div class="et-row"><div class="et-source"><div class="et-dot" style="background:#f472b6"></div>Instagram Collab</div><div class="et-amount">₹11,600</div></div>
+            </div>
+          </div>
+          <div class="ov-card">
+            <div class="ov-card-head"><h3>TDS Summary</h3></div>
+            <div class="tds-block">
+              <div class="tds-row"><span class="tds-label">Gross Income</span><div class="tds-val">₹84,000</div></div>
+              <div class="tds-row"><span class="tds-label">TDS Deducted (10%)</span><div class="tds-val amber">- ₹8,400</div></div>
+              <div class="tds-row"><span class="tds-label">Net Receivable</span><div class="tds-val green">₹75,600</div></div>
+            </div>
+            <div class="ov-card-head" style="margin-top:20px;"><h3>Investments</h3></div>
+            <div class="invest-block">
+              <div class="invest-row"><span>Mutual Funds</span><strong>₹15,000/mo</strong></div>
+              <div class="invest-row"><span>PPF Contribution</span><strong>₹5,000/mo</strong></div>
+              <div class="invest-tip">💡 <strong>CA Tip:</strong> Your 80C limit is ₹86,000 utilised of ₹1.5L. Add ₹64K more before March.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ BRAND DEALS ══ -->
+    <div class="dash-section demo-panel" id="panel-deals">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow mono">03 · BRAND DEALS</span>
+            <h1 class="section-title">Collaborations</h1>
+            <p class="section-desc">Your active deals, pipeline, and completed collaborations.</p>
+          </div>
+        </div>
+
+        <div class="deals-cards">
+          <div class="deal-card">
+            <div class="dc-brand">Mamaearth</div>
+            <div class="dc-niche">Skincare · Beauty</div>
+            <div class="dc-amount">₹45,000</div>
+            <div class="dc-meta">
+              <span class="badge badge-blue">Negotiating</span>
+              <span class="dc-due">Due Nov 15</span>
+            </div>
+          </div>
+          <div class="deal-card">
+            <div class="dc-brand">boAt Lifestyle</div>
+            <div class="dc-niche">Audio · Tech</div>
+            <div class="dc-amount">₹28,000</div>
+            <div class="dc-meta">
+              <span class="badge badge-green">Active</span>
+              <span class="dc-due">Due Nov 4</span>
+            </div>
+          </div>
+          <div class="deal-card">
+            <div class="dc-brand">Sugar Cosmetics</div>
+            <div class="dc-niche">Beauty · Makeup</div>
+            <div class="dc-amount">₹38,000</div>
+            <div class="dc-meta">
+              <span class="badge badge-green">Completed</span>
+              <span class="dc-due">Paid Oct 22</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="tc-head">
+            <h3>All Collaborations</h3>
+            <div class="tc-filters">
+              <button class="filter-btn active">All</button>
+              <button class="filter-btn">Active</button>
+              <button class="filter-btn">Negotiating</button>
+              <button class="filter-btn">Completed</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead><tr>
+                <th>Brand</th><th>Niche</th><th>Value</th><th>Status</th><th>Due Date</th>
+              </tr></thead>
+              <tbody>
+                <tr><td><strong>Mamaearth</strong></td><td>Skincare</td><td class="td-amount">₹45,000</td><td><span class="badge badge-blue">Negotiating</span></td><td>Nov 15</td></tr>
+                <tr><td><strong>boAt Lifestyle</strong></td><td>Audio Tech</td><td class="td-amount">₹28,000</td><td><span class="badge badge-green">Active</span></td><td>Nov 4</td></tr>
+                <tr><td><strong>Sugar Cosmetics</strong></td><td>Beauty</td><td class="td-amount">₹38,000</td><td><span class="badge badge-green">Completed</span></td><td>Paid</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CONTRACTS ══ -->
+    <div class="dash-section demo-panel" id="panel-contracts">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow mono">04 · LEGAL</span>
+            <h1 class="section-title">Contracts</h1>
+            <p class="section-desc">Every contract reviewed by the Create Vyral legal team before you sign.</p>
+          </div>
+        </div>
+
+        <div class="contracts-list">
+          <div class="contract-card pending">
+            <div class="cc-left">
+              <div class="cc-brand">Noise — Noise ColorFit Pro 5</div>
+              <div class="cc-type">Dedicated Review · YouTube + Instagram</div>
+              <div class="cc-notes">1 YouTube video (8–12 min) + 2 Instagram Reels. Usage rights: 6 months digital only.</div>
+            </div>
+            <div class="cc-right">
+              <div class="cc-value">₹32,000</div>
+              <span class="badge badge-amber">Pending Signature</span>
+              <div class="cc-date">Received Nov 1, 2025</div>
+            </div>
+          </div>
+          <div class="contract-card signed">
+            <div class="cc-left">
+              <div class="cc-brand">boAt Lifestyle — Airdopes 141</div>
+              <div class="cc-type">Honest Review · YouTube</div>
+              <div class="cc-notes">1 YouTube video (6–10 min). No exclusivity clause. Standard FTC disclosure required.</div>
+            </div>
+            <div class="cc-right">
+              <div class="cc-value">₹28,000</div>
+              <span class="badge badge-green">Signed</span>
+              <div class="cc-date">Signed Oct 29, 2025</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SETTINGS ══ -->
+    <div class="dash-section demo-panel" id="panel-settings">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <span class="section-eyebrow mono">05 · ACCOUNT</span>
+            <h1 class="section-title">Settings</h1>
+            <p class="section-desc">Manage your profile, plan, and preferences.</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="sc-title">Profile</div>
+            <div class="field"><label>Full Name</label><input type="text" value="Rahul Kumar" readonly/></div>
+            <div class="field"><label>Email</label><input type="text" value="demo@createvyral.com" readonly/></div>
+            <div class="field"><label>Channel Name</label><input type="text" value="RahulTech Tamil" readonly/></div>
+          </div>
+          <div class="settings-card">
+            <div class="sc-title">Subscription Plan</div>
+            <div class="plan-display">
+              <div class="pd-plan">🚀 GROWTH</div>
+              <div class="pd-price">₹4,999/month · Billed monthly</div>
+            </div>
+            <div class="plan-features-list">
+              <div class="pfl-item">Unlimited video editing requests</div>
+              <div class="pfl-item">CA &amp; Tax filing (GST + ITR)</div>
+              <div class="pfl-item">Brand deal sourcing &amp; negotiation</div>
+              <div class="pfl-item">CV Voice Forge AI access</div>
+              <div class="pfl-item">Dedicated account manager</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+function switchTab(panel, el) {
+  // Update sidebar active state
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  // Update topbar title
+  const titles = {
+    overview:'Overview', videos:'Videos', finances:'Finances',
+    deals:'Brand Deals', contracts:'Contracts', settings:'Settings'
+  };
+  document.getElementById('topbarTitle').textContent = titles[panel] || panel;
+
+  // Show/hide panels
+  document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('panel-' + panel);
+  if (target) target.classList.add('active');
+}
+
+// Filter button toggle
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.tc-filters')?.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

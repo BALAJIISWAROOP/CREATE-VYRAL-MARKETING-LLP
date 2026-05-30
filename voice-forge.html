@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CV Voice Forge — Create Vyral</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css"/>
+<link rel="stylesheet" href="voice-forge.css"/>
+<style>
+@keyframes vf-spin { to { transform:rotate(360deg); } }
+.vf-tab-panel { display:none; }
+.vf-tab-panel.active { display:block; }
+.vf-sample-panel { display:none; }
+.vf-sample-panel.active { display:block; }
+.vf-lang-chip { padding:6px 14px; border-radius:99px; border:1px solid rgba(244,241,232,.12); background:transparent; color:rgba(244,241,232,.55); font-size:12px; cursor:pointer; transition:.18s; font-family:'DM Sans',sans-serif; }
+.vf-lang-chip.active,.vf-lang-chip:hover { background:rgba(197,255,62,.12); border-color:rgba(197,255,62,.4); color:#C5FF3E; }
+.vf-voice-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px; cursor:pointer; transition:.15s; }
+.vf-voice-item:hover,.vf-voice-item.active { background:rgba(197,255,62,.08); }
+.vf-voice-avatar { width:32px; height:32px; border-radius:8px; background:rgba(255,255,255,.08); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+.vf-voice-avatar.violet { background:rgba(139,92,246,.15); }
+.vf-voice-name { font-size:13px; font-weight:600; flex:1; }
+.vf-voice-tag { font-size:10px; font-family:'JetBrains Mono',monospace; color:rgba(244,241,232,.4); flex-shrink:0; }
+.vf-project-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background:rgba(255,255,255,.04); border:1px solid rgba(244,241,232,.07); margin-bottom:8px; }
+.vf-project-avatar { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#C5FF3E,#4ade80); display:flex; align-items:center; justify-content:center; font-weight:700; color:#080808; font-size:15px; flex-shrink:0; }
+.vf-project-info { flex:1; min-width:0; }
+.vf-project-name { font-size:13px; font-weight:600; }
+.vf-project-meta { font-size:11px; color:rgba(244,241,232,.45); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+.vf-project-badge { font-size:10px; font-family:'JetBrains Mono',monospace; font-weight:700; padding:3px 8px; border-radius:99px; letter-spacing:.06em; flex-shrink:0; }
+.vf-project-badge.ready { background:rgba(197,255,62,.12); color:#C5FF3E; border:1px solid rgba(197,255,62,.3); }
+.vf-project-badge.demo  { background:rgba(245,158,11,.1); color:#f59e0b; border:1px solid rgba(245,158,11,.25); }
+.vf-history-item { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; cursor:pointer; border:1px solid rgba(244,241,232,.06); margin-bottom:6px; transition:.15s; }
+.vf-history-item:hover { background:rgba(255,255,255,.04); }
+.vf-hist-icon { width:28px; height:28px; border-radius:7px; background:rgba(197,255,62,.08); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.vf-hist-text { flex:1; min-width:0; }
+.vf-hist-excerpt { font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.vf-hist-meta { font-size:10px; color:rgba(244,241,232,.4); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+.vf-hist-dl { color:rgba(244,241,232,.4); padding:4px; flex-shrink:0; }
+.vf-hist-dl:hover { color:#C5FF3E; }
+.vf-empty-state { text-align:center; padding:40px 20px; color:rgba(244,241,232,.3); }
+.vf-empty-state p { margin:8px 0 0; font-size:13px; }
+.vf-empty-state small { font-size:11px; display:block; margin-top:4px; }
+.upload-zone { border:1.5px dashed rgba(244,241,232,.15); border-radius:14px; padding:28px; text-align:center; cursor:pointer; transition:.18s; background:rgba(255,255,255,.02); }
+.upload-zone:hover,.upload-zone.drag-over { border-color:rgba(197,255,62,.4); background:rgba(197,255,62,.04); }
+.upload-zone svg { margin-bottom:10px; opacity:.5; }
+.upload-zone p { font-size:13px; color:rgba(244,241,232,.6); margin:0; }
+.upload-zone small { font-size:11px; color:rgba(244,241,232,.35); font-family:'JetBrains Mono',monospace; }
+.upload-ready { display:none; align-items:center; gap:8px; margin-top:10px; padding:8px 12px; background:rgba(197,255,62,.08); border:1px solid rgba(197,255,62,.2); border-radius:8px; font-size:12px; }
+.rec-ready { display:none; align-items:center; gap:8px; margin-top:10px; padding:8px 12px; background:rgba(197,255,62,.08); border:1px solid rgba(197,255,62,.2); border-radius:8px; font-size:12px; }
+.rec-btn { display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:10px; border:1px solid rgba(244,241,232,.12); background:rgba(255,255,255,.04); cursor:pointer; font-size:13px; width:100%; justify-content:center; transition:.18s; font-family:'DM Sans',sans-serif; color:rgba(244,241,232,.8); }
+.rec-btn:hover { border-color:rgba(197,255,62,.3); color:#C5FF3E; }
+.rec-btn.recording { border-color:rgba(239,68,68,.5); color:#ef4444; background:rgba(239,68,68,.08); animation:vf-pulse 1s infinite; }
+@keyframes vf-pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+.dub-progress-bar { height:6px; background:rgba(255,255,255,.08); border-radius:99px; overflow:hidden; margin:10px 0; }
+.dub-progress-fill { height:100%; background:linear-gradient(90deg,#C5FF3E,#4ade80); border-radius:99px; transition:width .5s ease; }
+.vf-status-pill { display:inline-flex; align-items:center; padding:3px 10px; border-radius:99px; font-size:10px; font-family:'JetBrains Mono',monospace; font-weight:700; letter-spacing:.08em; }
+.vf-status-pill.warning { background:rgba(245,158,11,.1); color:#f59e0b; }
+.vf-status-pill.success  { background:rgba(197,255,62,.12); color:#C5FF3E; }
+.vf-status-pill.error    { background:rgba(239,68,68,.1); color:#ef4444; }
+/* Output card */
+#outputCard { display:none; margin-top:16px; padding:16px; background:rgba(255,255,255,.04); border:1px solid rgba(244,241,232,.08); border-radius:14px; }
+.player-row { display:flex; align-items:center; gap:10px; }
+.player-btn { width:34px; height:34px; border-radius:99px; background:rgba(197,255,62,.15); border:1px solid rgba(197,255,62,.3); color:#C5FF3E; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.player-btn:hover { background:rgba(197,255,62,.25); }
+.player-bar-wrap { flex:1; height:4px; background:rgba(255,255,255,.1); border-radius:99px; cursor:pointer; position:relative; }
+#playerFill { height:100%; background:#C5FF3E; border-radius:99px; width:0; }
+.player-time { font-family:'JetBrains Mono',monospace; font-size:10px; color:rgba(244,241,232,.45); white-space:nowrap; }
+.dl-btn { padding:6px 14px; border-radius:99px; background:rgba(255,255,255,.06); border:1px solid rgba(244,241,232,.12); font-size:11px; color:rgba(244,241,232,.7); text-decoration:none; font-family:'JetBrains Mono',monospace; }
+.dl-btn:hover { border-color:rgba(197,255,62,.4); color:#C5FF3E; }
+/* Hero */
+.vf-hero-banner { background:rgba(255,255,255,.03); border:1px solid rgba(244,241,232,.07); border-radius:20px; padding:28px 32px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.vf-hero-text .wb-eyebrow { font-size:10px; letter-spacing:.2em; font-family:'JetBrains Mono',monospace; color:rgba(244,241,232,.45); text-transform:uppercase; display:block; margin-bottom:8px; }
+.vf-hero-title { font-family:'Syne',sans-serif; font-size:clamp(22px,2.8vw,34px); font-weight:800; letter-spacing:-.04em; }
+.vf-hero-sub { font-size:13px; color:rgba(244,241,232,.5); margin-top:6px; }
+.vf-hero-stats { display:flex; align-items:center; gap:0; }
+.vf-hstat { text-align:center; padding:0 24px; }
+.vf-hstat-val { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; letter-spacing:-.04em; color:#C5FF3E; }
+.vf-hstat-label { font-size:10px; font-family:'JetBrains Mono',monospace; color:rgba(244,241,232,.4); margin-top:2px; letter-spacing:.1em; }
+.vf-hstat-divider { width:1px; height:40px; background:rgba(244,241,232,.1); }
+/* Paywall */
+#vfPaywall { display:none; position:absolute; inset:0; background:rgba(10,10,10,.92); backdrop-filter:blur(12px); z-index:50; align-items:center; justify-content:center; flex-direction:column; gap:16px; border-radius:20px; }
+#vfPaywall .pw-badge { font-size:10px; font-family:'JetBrains Mono',monospace; letter-spacing:.18em; text-transform:uppercase; background:rgba(197,255,62,.1); color:#C5FF3E; border:1px solid rgba(197,255,62,.3); padding:4px 12px; border-radius:99px; }
+#vfPaywall h2 { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; letter-spacing:-.04em; margin:0; }
+#vfPaywall p  { font-size:13px; color:rgba(244,241,232,.5); margin:0; text-align:center; }
+#vfPaywall a  { background:#C5FF3E; color:#080808; border-radius:999px; padding:10px 24px; font-weight:700; text-decoration:none; font-size:13px; }
+/* Tab nav */
+.vf-tab-nav { display:flex; gap:2px; border-bottom:1px solid rgba(244,241,232,.08); margin-bottom:24px; }
+.vf-tab-btn { display:flex; align-items:center; gap:6px; padding:10px 18px; font-size:12px; font-family:'JetBrains Mono',monospace; font-weight:600; letter-spacing:.06em; color:rgba(244,241,232,.45); background:transparent; border:none; border-bottom:2px solid transparent; cursor:pointer; transition:.18s; margin-bottom:-1px; }
+.vf-tab-btn:hover { color:rgba(244,241,232,.8); }
+.vf-tab-btn.active { color:#C5FF3E; border-bottom-color:#C5FF3E; }
+/* Sample tabs */
+.vf-sample-tabs { display:flex; gap:0; background:rgba(255,255,255,.05); border-radius:10px; padding:3px; margin-bottom:14px; }
+.vf-sample-tab { flex:1; padding:7px; text-align:center; font-size:11px; font-family:'JetBrains Mono',monospace; font-weight:600; cursor:pointer; border-radius:8px; color:rgba(244,241,232,.45); transition:.15s; }
+.vf-sample-tab.active { background:rgba(255,255,255,.1); color:rgba(244,241,232,.9); }
+/* Studio grid */
+.vf-studio-grid { display:grid; grid-template-columns:1fr 320px; gap:20px; }
+@media (max-width:900px) { .vf-studio-grid { grid-template-columns:1fr; } }
+.vf-clone-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media (max-width:900px) { .vf-clone-grid { grid-template-columns:1fr; } }
+/* Cards */
+.vf-card { background:rgba(255,255,255,.03); border:1px solid rgba(244,241,232,.07); border-radius:16px; padding:18px; }
+.vf-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.vf-card-title { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:600; font-family:'JetBrains Mono',monospace; letter-spacing:.05em; color:rgba(244,241,232,.7); }
+/* Text input */
+#ttsText { width:100%; min-height:160px; resize:vertical; background:rgba(255,255,255,.04); border:1px solid rgba(244,241,232,.1); border-radius:10px; padding:12px; font-size:13px; color:rgba(244,241,232,.9); font-family:'DM Sans',sans-serif; line-height:1.6; }
+#ttsText:focus { outline:none; border-color:rgba(197,255,62,.3); }
+.char-bar { height:2px; background:rgba(255,255,255,.08); border-radius:99px; margin-top:6px; overflow:hidden; }
+#charFill { height:100%; background:#C5FF3E; border-radius:99px; width:0; transition:width .2s; }
+#charFill.warn { background:#ef4444; }
+#charCount { font-size:11px; font-family:'JetBrains Mono',monospace; color:rgba(244,241,232,.35); }
+#charCount.warn { color:#ef4444; }
+/* Lang chips */
+#langGrid { display:flex; flex-wrap:wrap; gap:6px; margin:12px 0; }
+/* Voice list */
+#voiceList { max-height:220px; overflow-y:auto; }
+#voiceList::-webkit-scrollbar { width:4px; }
+#voiceList::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:99px; }
+/* Generate button */
+#generateBtn { width:100%; padding:12px; border-radius:12px; background:linear-gradient(135deg,#C5FF3E,#4ade80); border:none; color:#080808; font-weight:700; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; transition:.18s; font-family:'DM Sans',sans-serif; }
+#generateBtn:hover { opacity:.9; }
+#generateBtn:disabled { opacity:.5; cursor:not-allowed; }
+/* Create clone button */
+#createCloneBtn { width:100%; padding:11px; border-radius:12px; background:rgba(197,255,62,.15); border:1px solid rgba(197,255,62,.3); color:#C5FF3E; font-weight:700; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; transition:.18s; font-family:'DM Sans',sans-serif; }
+#createCloneBtn:hover { background:rgba(197,255,62,.25); }
+#createCloneBtn:disabled { opacity:.5; cursor:not-allowed; }
+/* Advanced toggle */
+#advBody { display:none; padding-top:14px; border-top:1px solid rgba(244,241,232,.07); margin-top:14px; }
+#advBody.open { display:block; }
+#advChevron { transition:.2s; }
+#advChevron.open { transform:rotate(180deg); }
+/* Sliders */
+input[type=range] { width:100%; accent-color:#C5FF3E; }
+/* Select */
+select.vf-select { width:100%; padding:8px 12px; background:rgba(255,255,255,.05); border:1px solid rgba(244,241,232,.1); border-radius:8px; color:rgba(244,241,232,.8); font-size:13px; font-family:'DM Sans',sans-serif; }
+/* Waveform canvas */
+#waveformCanvas { width:100%; height:64px; border-radius:8px; }
+/* Toast */
+#vfToast { position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
+.vf-toast-item { padding:10px 16px; border-radius:10px; font-size:13px; font-family:'DM Sans',sans-serif; font-weight:500; animation:vf-toast-in .25s ease; max-width:300px; }
+@keyframes vf-toast-in { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.vf-toast-item.success { background:#1a2e0a; border:1px solid rgba(197,255,62,.3); color:#C5FF3E; }
+.vf-toast-item.error   { background:#2e0a0a; border:1px solid rgba(239,68,68,.3); color:#ef4444; }
+.vf-toast-item.info    { background:#0a1a2e; border:1px solid rgba(59,130,246,.3); color:#93c5fd; }
+/* Voice search */
+#voiceSearch { width:100%; padding:7px 10px; background:rgba(255,255,255,.05); border:1px solid rgba(244,241,232,.1); border-radius:8px; font-size:12px; color:rgba(244,241,232,.8); font-family:'DM Sans',sans-serif; margin-bottom:8px; }
+#voiceSearch:focus { outline:none; border-color:rgba(197,255,62,.3); }
+</style>
+</head>
+<body>
+
+<div class="app" id="app" style="position:relative;">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <a href="index.html" class="sb-logo"><span class="dot"></span> Create Vyral</a>
+      <div class="sb-plan-badge" id="sbPlanBadge">
+        <span class="spb-icon" id="sbPlanIcon">🚀</span>
+        <span class="spb-name" id="sbPlanName">GROWTH</span>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <a href="dashboard.html" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </a>
+      <a href="dashboard.html#videos" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        Videos
+      </a>
+      <a href="dashboard.html#finances" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Finances
+      </a>
+      <a href="dashboard.html#deals" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Brand Deals
+      </a>
+      <a href="dashboard.html#contracts" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Contracts
+      </a>
+      <div class="sb-divider"></div>
+      <div class="sb-section-label mono">AI TOOLS</div>
+      <a href="voice-forge.html" class="sb-link active vf-sidebar-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        CV Voice Forge
+        <span class="sb-badge vf-badge">AI</span>
+      </a>
+      <div class="sb-divider"></div>
+      <a href="dashboard.html#settings" class="sb-link">
+        <svg class="sb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Settings
+      </a>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-user" id="sbUser">
+        <div class="sb-avatar" id="sbAvatar">A</div>
+        <div class="sb-user-info">
+          <div class="sb-name" id="sbName">Creator</div>
+          <div class="sb-email mono" id="sbEmail">Loading...</div>
+        </div>
+      </div>
+      <button class="sb-logout" id="logoutBtn" title="Log Out">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="sb-logout-label">Log Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main" id="mainArea">
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="topbar-title">
+        CV Voice Forge
+        <span style="display:inline-flex;align-items:center;background:#C5FF3E;color:#080808;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:middle;">AI</span>
+      </div>
+      <div class="topbar-right">
+        <div class="tb-avatar" id="tbAvatar">A</div>
+      </div>
+    </header>
+
+    <!-- ════════ VOICE FORGE CONTENT ════════ -->
+    <div class="vf-content" style="padding:28px 32px;overflow-y:auto;height:calc(100vh - 72px);position:relative;">
+
+      <!-- Paywall overlay (SPARK plan) -->
+      <div id="vfPaywall">
+        <span class="pw-badge">CV VOICE FORGE AI</span>
+        <h2>Upgrade to Access CV Voice Forge</h2>
+        <p>CV Voice Forge is available on Growth and Pro plans.<br>Clone voices and generate real AI speech.</p>
+        <a href="dashboard.html#settings">Upgrade Plan →</a>
+      </div>
+
+      <!-- HERO BANNER -->
+      <div class="vf-hero-banner">
+        <div class="vf-hero-text">
+          <span class="wb-eyebrow">Create Vyral · CV Voice Forge AI</span>
+          <div class="vf-hero-title">Your AI Voice Studio</div>
+          <div class="vf-hero-sub">Generate speech, clone voices &amp; dub videos — all powered by XTTS-v2.</div>
+        </div>
+        <div class="vf-hero-stats">
+          <div class="vf-hstat">
+            <div class="vf-hstat-val" id="hstatGens">0</div>
+            <div class="vf-hstat-label mono">Generations</div>
+          </div>
+          <div class="vf-hstat-divider"></div>
+          <div class="vf-hstat">
+            <div class="vf-hstat-val" id="hstatVoices">0</div>
+            <div class="vf-hstat-label mono">Voice Projects</div>
+          </div>
+          <div class="vf-hstat-divider"></div>
+          <div class="vf-hstat">
+            <div class="vf-hstat-val" id="hstatChars">0</div>
+            <div class="vf-hstat-label mono">Chars Generated</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB NAV -->
+      <div class="vf-tab-nav">
+        <button class="vf-tab-btn active" data-tab="studio">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+          TEXT TO SPEECH
+        </button>
+        <button class="vf-tab-btn" data-tab="clone">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+          VOICE CLONING
+        </button>
+        <button class="vf-tab-btn" data-tab="dub">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+          VIDEO DUBBING
+        </button>
+      </div>
+
+      <!-- ═══ TAB: TEXT-TO-SPEECH ═══ -->
+      <div class="vf-tab-panel active" id="tab-studio">
+        <div class="vf-studio-grid">
+
+          <!-- LEFT: Input -->
+          <div>
+            <div class="vf-card">
+              <div class="vf-card-head">
+                <span class="vf-card-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/></svg>
+                  YOUR TEXT
+                </span>
+                <span id="charCount">0 / 5000</span>
+              </div>
+              <textarea id="ttsText" placeholder="Type or paste text here… Try: 'Hello, I am your AI voice.'"></textarea>
+              <div class="char-bar"><div id="charFill"></div></div>
+            </div>
+
+            <!-- Language chips -->
+            <div style="margin-top:16px;">
+              <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);margin-bottom:8px;letter-spacing:.1em;">LANGUAGE</div>
+              <div id="langGrid"></div>
+            </div>
+
+            <!-- Advanced settings -->
+            <div class="vf-card" style="margin-top:16px;">
+              <button id="advToggle" style="width:100%;display:flex;justify-content:space-between;align-items:center;background:none;border:none;color:rgba(244,241,232,.7);font-size:12px;font-family:'JetBrains Mono',monospace;cursor:pointer;padding:0;letter-spacing:.06em;">
+                ADVANCED SETTINGS
+                <svg id="advChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div id="advBody">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div>
+                    <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;">SPEED — <span id="speedVal">1.0×</span></label>
+                    <input type="range" id="speedSlider" min="0.5" max="2" step="0.1" value="1" style="width:100%;margin-top:8px;">
+                  </div>
+                  <div>
+                    <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;">PITCH — <span id="pitchVal">+0 Hz</span></label>
+                    <input type="range" id="pitchSlider" min="-50" max="50" step="5" value="0" style="width:100%;margin-top:8px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button id="generateBtn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              Generate Speech
+            </button>
+
+            <!-- Audio output -->
+            <div id="outputCard">
+              <canvas id="waveformCanvas" height="64"></canvas>
+              <div class="player-row" style="margin-top:12px;">
+                <button class="player-btn" id="playBtn">
+                  <svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </button>
+                <div class="player-bar-wrap" id="playerBar"><div id="playerFill"></div></div>
+                <span class="player-time"><span id="currentTime">0:00</span> / <span id="totalTime">0:00</span></span>
+                <a class="dl-btn" id="dlBtn" download="voiceforge.mp3">↓ Download</a>
+              </div>
+              <audio id="audioPlayer" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;"></audio>
+            </div>
+          </div>
+
+          <!-- RIGHT: Voice selector + History -->
+          <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="vf-card" style="flex:1;">
+              <div class="vf-card-head">
+                <span class="vf-card-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/></svg>
+                  SELECT VOICE
+                </span>
+              </div>
+              <input id="voiceSearch" type="text" placeholder="Search voices…">
+              <div id="voiceList"></div>
+            </div>
+
+            <div class="vf-card">
+              <div class="vf-card-head">
+                <span class="vf-card-title">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  RECENT
+                </span>
+              </div>
+              <div id="historyList"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TAB: VOICE CLONING ═══ -->
+      <div class="vf-tab-panel" id="tab-clone">
+        <div class="vf-clone-grid">
+
+          <!-- LEFT: Create form -->
+          <div class="vf-card">
+            <div class="vf-card-head">
+              <span class="vf-card-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                NEW VOICE PROJECT
+              </span>
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:6px;">VOICE NAME *</label>
+              <input id="cloneName" type="text" placeholder="e.g. My Voice, Rahul's Voice" style="width:100%;padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(244,241,232,.1);border-radius:8px;color:rgba(244,241,232,.9);font-size:13px;font-family:'DM Sans',sans-serif;" />
+            </div>
+
+            <div style="margin-bottom:12px;">
+              <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:6px;">DESCRIPTION</label>
+              <input id="cloneDesc" type="text" placeholder="Describe this voice…" style="width:100%;padding:9px 12px;background:rgba(255,255,255,.05);border:1px solid rgba(244,241,232,.1);border-radius:8px;color:rgba(244,241,232,.9);font-size:13px;font-family:'DM Sans',sans-serif;" />
+            </div>
+
+            <div style="margin-bottom:16px;">
+              <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:6px;">LANGUAGE</label>
+              <select id="cloneLang" class="vf-select">
+                <option value="en">🇺🇸 English</option>
+                <option value="hi">🇮🇳 Hindi</option>
+                <option value="ta">🇮🇳 Tamil</option>
+                <option value="te">🇮🇳 Telugu</option>
+                <option value="kn">🇮🇳 Kannada</option>
+                <option value="es">🇪🇸 Spanish</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+                <option value="ja">🇯🇵 Japanese</option>
+                <option value="zh">🇨🇳 Chinese</option>
+              </select>
+            </div>
+
+            <!-- Voice sample upload/record tabs -->
+            <div>
+              <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:8px;">VOICE SAMPLE *</label>
+              <div class="vf-sample-tabs">
+                <div class="vf-sample-tab active" data-stab="upload">⬆ Upload File</div>
+                <div class="vf-sample-tab" data-stab="record">🎙 Record Mic</div>
+              </div>
+
+              <!-- Upload panel -->
+              <div class="vf-sample-panel active" id="spUpload">
+                <div class="upload-zone" id="uploadZone">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <p>Click or drag audio file here</p>
+                  <small>MP3, WAV, OGG, FLAC, WebM · Min 5 seconds · Max 50MB</small>
+                </div>
+                <input type="file" id="sampleFileInput" accept="audio/*" style="display:none;">
+                <div class="upload-ready" id="uploadReady">
+                  <span style="color:#C5FF3E;">✓</span>
+                  <span id="uploadFileName">sample.mp3</span>
+                </div>
+              </div>
+
+              <!-- Record panel -->
+              <div class="vf-sample-panel" id="spRecord">
+                <button class="rec-btn" id="recordBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+                  <span id="recStatus">Click to start recording</span>
+                  <span id="recTimer" style="font-family:'JetBrains Mono',monospace;font-size:11px;margin-left:auto;opacity:.6;">0:00</span>
+                </button>
+                <div class="rec-ready" id="recReady">
+                  <span style="color:#C5FF3E;">✓</span>
+                  Recording ready — <span id="recDuration">0s</span>
+                </div>
+                <p style="font-size:11px;color:rgba(244,241,232,.35);margin-top:8px;font-family:'JetBrains Mono',monospace;">Best results: 15–60 seconds · quiet room · single speaker</p>
+              </div>
+            </div>
+
+            <div style="padding:10px 12px;background:rgba(197,255,62,.05);border:1px solid rgba(197,255,62,.15);border-radius:8px;font-size:11px;color:rgba(244,241,232,.5);margin-top:12px;">
+              🤖 Uses <strong style="color:#C5FF3E;">XTTS-v2</strong> to extract a speaker embedding. Generation takes ~15–30s on first run.
+            </div>
+
+            <button id="createCloneBtn">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
+              Create Voice Project
+            </button>
+          </div>
+
+          <!-- RIGHT: Projects list -->
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <span style="font-size:12px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.5);letter-spacing:.08em;">MY VOICE PROJECTS</span>
+              <span id="cloneCount" style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.35);">0 projects</span>
+            </div>
+            <div id="projectsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TAB: VIDEO DUBBING ═══ -->
+      <div class="vf-tab-panel" id="tab-dub">
+        <div style="max-width:620px;">
+
+          <div class="vf-card" style="margin-bottom:16px;">
+            <div class="vf-card-head">
+              <span class="vf-card-title">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+                UPLOAD VIDEO
+              </span>
+            </div>
+            <div class="upload-zone" id="videoUploadZone">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              <p>Click or drag video file here</p>
+              <small>MP4, MOV, AVI, WebM · Max 500MB</small>
+            </div>
+            <input type="file" id="videoFileInput" accept="video/*" style="display:none;">
+            <div class="upload-ready" id="videoReady" style="margin-top:10px;">
+              <span style="color:#C5FF3E;">✓</span>
+              <span id="videoFileName">video.mp4</span>
+            </div>
+          </div>
+
+          <div class="vf-card" style="margin-bottom:16px;">
+            <div class="vf-card-head">
+              <span class="vf-card-title">LANGUAGE SETTINGS</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <div>
+                <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:6px;">SOURCE LANGUAGE</label>
+                <select id="dubSrcLang" class="vf-select">
+                  <option value="en">🇺🇸 English</option>
+                  <option value="hi">🇮🇳 Hindi</option>
+                  <option value="ta">🇮🇳 Tamil</option>
+                  <option value="es">🇪🇸 Spanish</option>
+                  <option value="fr">🇫🇷 French</option>
+                  <option value="de">🇩🇪 German</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.4);letter-spacing:.08em;display:block;margin-bottom:6px;">TARGET LANGUAGE</label>
+                <select id="dubTgtLang" class="vf-select">
+                  <option value="hi">🇮🇳 Hindi</option>
+                  <option value="en">🇺🇸 English</option>
+                  <option value="ta">🇮🇳 Tamil</option>
+                  <option value="es">🇪🇸 Spanish</option>
+                  <option value="fr">🇫🇷 French</option>
+                  <option value="de">🇩🇪 German</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button id="startDubBtn" style="width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#C5FF3E,#4ade80);border:none;color:#080808;font-weight:700;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'DM Sans',sans-serif;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Start Dubbing
+          </button>
+
+          <!-- Status card -->
+          <div id="dubStatusCard" style="display:none;margin-top:16px;" class="vf-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span style="font-size:12px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.5);letter-spacing:.08em;">STATUS</span>
+              <span class="vf-status-pill warning" id="dubStatusPill">Processing</span>
+            </div>
+            <div class="dub-progress-bar"><div class="dub-progress-fill" id="dubProgressFill" style="width:0%"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:6px;">
+              <span id="dubStepLabel" style="font-size:12px;color:rgba(244,241,232,.6);">Waiting...</span>
+              <span id="dubPct" style="font-size:12px;font-family:'JetBrains Mono',monospace;color:rgba(244,241,232,.45);">0%</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /vf-content -->
+  </main>
+</div>
+
+<!-- Toast container -->
+<div id="vfToast"></div>
+
+<!-- Generate-from-clone modal -->
+<div id="vfGenModal" style="display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;">
+  <div style="background:#111;border:1px solid rgba(244,241,232,.1);border-radius:20px;padding:28px;width:min(480px,92vw);box-shadow:0 24px 64px rgba(0,0,0,.6);">
+    <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.03em;margin-bottom:4px;">Generate in <span id="vfGenModalVoiceName" style="color:#C5FF3E;"></span></div>
+    <div style="font-size:12px;color:rgba(244,241,232,.4);font-family:'JetBrains Mono',monospace;margin-bottom:18px;">Powered by XTTS-v2</div>
+    <textarea id="vfGenModalText" rows="4" placeholder="Type the text you want spoken in this voice… (max 500 chars)" maxlength="500"
+      style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(244,241,232,.12);border-radius:12px;padding:12px 14px;color:#F4F1E8;font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;box-sizing:border-box;"></textarea>
+    <div style="font-size:11px;color:rgba(244,241,232,.35);font-family:'JetBrains Mono',monospace;margin-top:6px;margin-bottom:16px;"><span id="vfGenModalCount">0</span> / 500</div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="document.getElementById('vfGenModal').style.display='none'"
+        style="padding:9px 20px;border-radius:99px;border:1px solid rgba(244,241,232,.15);background:transparent;color:rgba(244,241,232,.6);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;">Cancel</button>
+      <button id="vfGenModalBtn" onclick="submitGenModal()"
+        style="padding:9px 22px;border-radius:99px;border:none;background:#C5FF3E;color:#080808;cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;">▶ Generate</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script src="voice-forge.js"></script>
+</body>
+</html>

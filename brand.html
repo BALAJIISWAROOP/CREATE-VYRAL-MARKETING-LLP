@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brand Marketplace — Create Vyral · Find South India's Best Creators</title>
+<meta name="description" content="Discover 200+ verified South Indian creators. Filter by niche, location, platform, followers and more. Get full insights for just ₹10." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="brand.css" />
+</head>
+<body>
+
+<!-- ════════ NAV ════════ -->
+<nav class="brand-nav" id="mainNav">
+  <a href="index.html" class="nav-brand-link">
+    <span class="nav-dot"></span>Create Vyral
+  </a>
+  <div class="nav-sep"></div>
+  <a href="index.html#services" class="nav-link-item">For Creators</a>
+  <a href="index.html#pricing" class="nav-link-item">Plans</a>
+  <div class="nav-sep"></div>
+  <div class="nav-brand-pill" id="brandNavPill" style="cursor:pointer" onclick="openAuthModal()">
+    🏢 Brand Login
+  </div>
+  <a href="auth.html" class="nav-cta-pill">Creator Sign Up →</a>
+</nav>
+
+<!-- ════════ HERO ════════ -->
+<section class="brand-hero">
+  <div class="container">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span class="mono">Brand Marketplace · Create Vyral</span>
+    </div>
+    <h1>
+      Find South India's<br>
+      <em>best creators.</em>
+    </h1>
+    <p class="hero-sub">Browse 200+ verified Tamil, Telugu, Kannada &amp; Malayalam creators. Filter by niche, location, followers and platform — and connect in minutes.</p>
+    <div class="hero-actions">
+      <button class="btn-hero-primary" onclick="document.getElementById('filterBar').scrollIntoView({behavior:'smooth'})">
+        Browse Creators
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-hero-ghost" onclick="openAuthModal()">
+        Brand Login / Sign Up
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">200<span>+</span></div>
+        <div class="hero-stat-label">Verified Creators</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">10</div>
+        <div class="hero-stat-label">Content Niches</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">4</div>
+        <div class="hero-stat-label">South Indian Languages</div>
+      </div>
+      <div class="hero-stat-item">
+        <div class="hero-stat-num">₹<span>10</span></div>
+        <div class="hero-stat-label">Full Access · One Time</div>
+      </div>
+    </div>
+
+    <!-- Niche quick filter -->
+    <div class="niche-quickbar">
+      <span class="niche-quickbar-label mono">Browse by niche:</span>
+      <button class="niche-quick-pill active" data-niche="all">All</button>
+      <button class="niche-quick-pill" data-niche="Tech &amp; Gadgets">📱 Tech</button>
+      <button class="niche-quick-pill" data-niche="Beauty &amp; Skincare">💄 Beauty</button>
+      <button class="niche-quick-pill" data-niche="Food &amp; Cooking">🍛 Food</button>
+      <button class="niche-quick-pill" data-niche="Fashion &amp; Style">👗 Fashion</button>
+      <button class="niche-quick-pill" data-niche="Gaming">🎮 Gaming</button>
+      <button class="niche-quick-pill" data-niche="Travel &amp; Vlog">✈️ Travel</button>
+      <button class="niche-quick-pill" data-niche="Finance &amp; Investment">📈 Finance</button>
+      <button class="niche-quick-pill" data-niche="Fitness &amp; Wellness">💪 Fitness</button>
+      <button class="niche-quick-pill" data-niche="Comedy &amp; Entertainment">😂 Comedy</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ FILTER BAR ════════ -->
+<div id="filterBar">
+  <div class="container">
+    <div class="filter-inner">
+      <input id="f-search" class="filter-search" type="text" placeholder="🔍  Search by name, niche or city…" autocomplete="off" />
+
+      <select id="f-niche" class="filter-select">
+        <option value="all">All Niches</option>
+        <option value="Tech &amp; Gadgets">Tech &amp; Gadgets</option>
+        <option value="Beauty &amp; Skincare">Beauty &amp; Skincare</option>
+        <option value="Food &amp; Cooking">Food &amp; Cooking</option>
+        <option value="Fashion &amp; Style">Fashion &amp; Style</option>
+        <option value="Gaming">Gaming</option>
+        <option value="Travel &amp; Vlog">Travel &amp; Vlog</option>
+        <option value="Finance &amp; Investment">Finance &amp; Investment</option>
+        <option value="Fitness &amp; Wellness">Fitness &amp; Wellness</option>
+        <option value="Comedy &amp; Entertainment">Comedy &amp; Entertainment</option>
+        <option value="Lifestyle &amp; Vlogs">Lifestyle &amp; Vlogs</option>
+        <option value="Sports &amp; Cricket">Sports &amp; Cricket</option>
+      </select>
+
+      <select id="f-platform" class="filter-select">
+        <option value="all">All Platforms</option>
+        <option value="YouTube">YouTube Only</option>
+        <option value="Instagram">Instagram Only</option>
+        <option value="Both">YouTube + Instagram</option>
+      </select>
+
+      <select id="f-state" class="filter-select">
+        <option value="all">All States</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+        <option value="Karnataka">Karnataka</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="Kerala">Kerala</option>
+      </select>
+
+      <select id="f-followers" class="filter-select">
+        <option value="all">All Sizes</option>
+        <option value="10K-50K">10K – 50K</option>
+        <option value="50K-150K">50K – 150K</option>
+        <option value="150K-500K">150K – 500K</option>
+        <option value="500K+">500K +</option>
+      </select>
+
+      <select id="f-language" class="filter-select">
+        <option value="all">All Languages</option>
+        <option value="Tamil">Tamil</option>
+        <option value="Telugu">Telugu</option>
+        <option value="Kannada">Kannada</option>
+        <option value="Malayalam">Malayalam</option>
+      </select>
+
+      <button class="filter-meta-verified" id="fMetaVerified" onclick="toggleMetaVerifiedFilter(this)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" fill="rgba(225,140,180,.8)"/><path d="M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4z" fill="#fff"/></svg>
+        Meta Verified Only
+      </button>
+      <button class="filter-clear-btn" onclick="clearFilters()">Clear ✕</button>
+      <div class="filter-result-count mono"><strong id="resultCount">14 creators</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ CREATOR GRID ════════ -->
+<section class="grid-section">
+  <div class="container">
+    <div class="creator-grid" id="creatorGrid"></div>
+    <div id="emptyState">
+      <div class="empty-icon">🔍</div>
+      <h3>No creators found</h3>
+      <p style="margin-top:8px">Try adjusting your filters or <button onclick="clearFilters()" style="color:var(--accent);cursor:pointer;background:none;border:none;font-size:inherit">clear all filters</button></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ HOW IT WORKS ════════ -->
+<section class="how-section">
+  <div class="container">
+    <div class="how-head">
+      <div class="mono">How It Works</div>
+      <h2>Partner with creators<br><em>in 4 simple steps.</em></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔍</div>
+        <div class="step-title">Browse & Filter</div>
+        <div class="step-desc">Search creators by niche, platform, location, followers and language to find your perfect match.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">🔓</div>
+        <div class="step-title">Pay ₹10 Access</div>
+        <div class="step-desc">One-time ₹10 payment via UPI gives you full access to all creator profiles, rates and contact details.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">📊</div>
+        <div class="step-title">View Full Insights</div>
+        <div class="step-desc">See exact followers, avg views, retention rate, audience demographics, past brands and rate cards.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">🤝</div>
+        <div class="step-title">Connect via Create Vyral</div>
+        <div class="step-desc">All outreach and contracts go through Create Vyral's team — creators are protected and brands get results.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ CTA BANNER ════════ -->
+<div class="container">
+  <div class="brand-cta-banner">
+    <div class="bcb-left">
+      <h2>Ready to find your<br><em>perfect creator?</em></h2>
+      <p>Get full access to all creator profiles, insights and rate cards for just ₹10.</p>
+    </div>
+    <button class="btn-cta-big" onclick="openAuthModal()">
+      Get Brand Access — ₹10
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="brand-footer">
+  <div class="container">
+    <p>© 2025 <strong>Create Vyral Marketing LLP</strong> · Registered Company · India ·
+    <a href="index.html">For Creators</a> ·
+    <a href="mailto:createvyral@gmail.com">createvyral@gmail.com</a></p>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════
+     BRAND AUTH MODAL
+     ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="brandAuthModal">
+  <div class="auth-modal-box">
+    <button class="auth-close-btn" onclick="closeAuthModal()">✕</button>
+
+    <div id="authFormLoginArea">
+      <div class="auth-modal-title">Brand Access</div>
+      <div class="auth-modal-sub">Sign up to browse full creator profiles &amp; insights.</div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" data-tab="signup" onclick="switchAuthTab('signup')">Sign Up</div>
+        <div class="auth-tab" data-tab="login" onclick="switchAuthTab('login')">Login</div>
+      </div>
+
+      <!-- Sign Up Panel -->
+      <div id="authFormPanel">
+        <div id="signupError" class="auth-error"></div>
+        <div class="auth-field-row">
+          <div class="auth-field">
+            <label>Brand / Company Name</label>
+            <input id="sb-brand" class="auth-input" type="text" placeholder="e.g. boAt, Mamaearth" />
+          </div>
+          <div class="auth-field">
+            <label>Your Name</label>
+            <input id="sb-contact" class="auth-input" type="text" placeholder="Contact person" />
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Email Address</label>
+          <input id="sb-email" class="auth-input" type="email" placeholder="you@company.com" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input id="sb-password" class="auth-input" type="password" placeholder="Min. 6 characters" />
+        </div>
+        <div class="auth-field">
+          <label>Industry / Category</label>
+          <select id="sb-industry" class="auth-input" style="cursor:pointer">
+            <option value="">Select your industry</option>
+            <option>Tech & Electronics</option>
+            <option>Beauty & Personal Care</option>
+            <option>Food & Beverage</option>
+            <option>Fashion & Apparel</option>
+            <option>Finance & Fintech</option>
+            <option>Health & Fitness</option>
+            <option>Travel & Hospitality</option>
+            <option>Gaming</option>
+            <option>E-Commerce / D2C</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <button class="auth-submit-btn" onclick="handleSignup()">Continue to Payment →</button>
+      </div>
+
+      <!-- Login Panel -->
+      <div id="loginFormPanel" style="display:none">
+        <div id="loginError" class="auth-error"></div>
+        <div class="auth-field">
+          <label>Email Address</label>
+          <input id="lb-email" class="auth-input" type="email" placeholder="you@company.com" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input id="lb-password" class="auth-input" type="password" placeholder="Your password" />
+        </div>
+        <button class="auth-submit-btn" onclick="handleLogin()">Sign In to Brand Dashboard →</button>
+      </div>
+    </div>
+
+    <!-- Payment Panel -->
+    <div id="paymentPanel">
+      <div class="payment-header">
+        <div class="pay-icon">📱</div>
+        <h3>One-time access: ₹10</h3>
+        <p>Scan the QR code or use the UPI ID below to pay ₹10 and unlock all creator profiles.</p>
+      </div>
+
+      <div class="qr-box">
+        <div class="qr-visual">
+          <!-- SVG QR code simulation (UPI QR visual) -->
+          <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="background:#fff">
+            <!-- Top-left finder -->
+            <rect x="10" y="10" width="30" height="30" fill="#000" rx="3"/>
+            <rect x="14" y="14" width="22" height="22" fill="#fff" rx="2"/>
+            <rect x="18" y="18" width="14" height="14" fill="#000" rx="1"/>
+            <!-- Top-right finder -->
+            <rect x="80" y="10" width="30" height="30" fill="#000" rx="3"/>
+            <rect x="84" y="14" width="22" height="22" fill="#fff" rx="2"/>
+            <rect x="88" y="18" width="14" height="14" fill="#000" rx="1"/>
+            <!-- Bottom-left finder -->
+            <rect x="10" y="80" width="30" height="30" fill="#000" rx="3"/>
+            <rect x="14" y="84" width="22" height="22" fill="#fff" rx="2"/>
+            <rect x="18" y="88" width="14" height="14" fill="#000" rx="1"/>
+            <!-- Data modules (fake pattern) -->
+            <rect x="50" y="10" width="6" height="6" fill="#000"/>
+            <rect x="58" y="10" width="6" height="6" fill="#000"/>
+            <rect x="66" y="10" width="6" height="6" fill="#000"/>
+            <rect x="50" y="18" width="6" height="6" fill="#000"/>
+            <rect x="66" y="18" width="6" height="6" fill="#000"/>
+            <rect x="58" y="26" width="6" height="6" fill="#000"/>
+            <rect x="10" y="50" width="6" height="6" fill="#000"/>
+            <rect x="18" y="50" width="6" height="6" fill="#000"/>
+            <rect x="26" y="50" width="6" height="6" fill="#000"/>
+            <rect x="10" y="58" width="6" height="6" fill="#000"/>
+            <rect x="26" y="58" width="6" height="6" fill="#000"/>
+            <rect x="18" y="66" width="6" height="6" fill="#000"/>
+            <rect x="50" y="50" width="6" height="6" fill="#000"/>
+            <rect x="58" y="50" width="6" height="6" fill="#000"/>
+            <rect x="66" y="58" width="6" height="6" fill="#000"/>
+            <rect x="50" y="58" width="6" height="6" fill="#000"/>
+            <rect x="58" y="66" width="6" height="6" fill="#000"/>
+            <rect x="66" y="66" width="6" height="6" fill="#000"/>
+            <rect x="80" y="50" width="6" height="6" fill="#000"/>
+            <rect x="88" y="50" width="6" height="6" fill="#000"/>
+            <rect x="96" y="50" width="6" height="6" fill="#000"/>
+            <rect x="104" y="50" width="6" height="6" fill="#000"/>
+            <rect x="80" y="58" width="6" height="6" fill="#000"/>
+            <rect x="96" y="58" width="6" height="6" fill="#000"/>
+            <rect x="104" y="66" width="6" height="6" fill="#000"/>
+            <rect x="88" y="66" width="6" height="6" fill="#000"/>
+            <rect x="50" y="80" width="6" height="6" fill="#000"/>
+            <rect x="66" y="80" width="6" height="6" fill="#000"/>
+            <rect x="58" y="88" width="6" height="6" fill="#000"/>
+            <rect x="50" y="96" width="6" height="6" fill="#000"/>
+            <rect x="58" y="96" width="6" height="6" fill="#000"/>
+            <rect x="66" y="96" width="6" height="6" fill="#000"/>
+            <rect x="80" y="80" width="6" height="6" fill="#000"/>
+            <rect x="96" y="80" width="6" height="6" fill="#000"/>
+            <rect x="104" y="80" width="6" height="6" fill="#000"/>
+            <rect x="88" y="88" width="6" height="6" fill="#000"/>
+            <rect x="80" y="96" width="6" height="6" fill="#000"/>
+            <rect x="96" y="96" width="6" height="6" fill="#000"/>
+            <rect x="104" y="96" width="6" height="6" fill="#000"/>
+            <!-- Center CV logo mark -->
+            <rect x="52" y="52" width="16" height="16" fill="#C5FF3E" rx="3"/>
+            <text x="60" y="63" text-anchor="middle" fill="#000" font-size="7" font-weight="bold" font-family="Arial">CV</text>
+          </svg>
+        </div>
+        <div class="qr-amount">₹10</div>
+        <div class="qr-amount-label">One-time Brand Access Fee</div>
+        <div class="qr-upi-label mono">UPI ID</div>
+        <div class="qr-upi-id">createvyral@ybl</div>
+        <div class="qr-steps">
+          1. Open any UPI app (GPay, PhonePe, Paytm)<br>
+          2. Scan QR or pay to <strong>createvyral@ybl</strong><br>
+          3. Enter ₹10 → Add note "Brand Access"<br>
+          4. Copy the UTR / transaction ID below
+        </div>
+      </div>
+
+      <div class="utr-field">
+        <label>Transaction Reference / UTR Number</label>
+        <input id="utrInput" class="auth-input" type="text" placeholder="e.g. 407831920564" />
+      </div>
+      <div id="paymentError"></div>
+      <button id="verifyPayBtn" onclick="verifyPayment()">Confirm Payment &amp; Get Access →</button>
+    </div>
+
+    <!-- Success Panel -->
+    <div id="authSuccessPanel">
+      <div class="success-icon">🎉</div>
+      <div class="success-title">Access Granted!</div>
+      <div class="success-sub">Welcome, <strong id="successBrandName"></strong>! You now have full access to all creator profiles, insights and rate cards on the Create Vyral marketplace.</div>
+      <div class="success-perks">
+        <div class="success-perk"><span class="perk-icon">✓</span><span>Full creator profiles with exact follower counts</span></div>
+        <div class="success-perk"><span class="perk-icon">✓</span><span>YouTube retention rates &amp; average views</span></div>
+        <div class="success-perk"><span class="perk-icon">✓</span><span>Audience demographics (age, gender, location)</span></div>
+        <div class="success-perk"><span class="perk-icon">✓</span><span>Rate cards for all content formats</span></div>
+        <div class="success-perk"><span class="perk-icon">✓</span><span>Past brand collaboration history</span></div>
+        <div class="success-perk"><span class="perk-icon">✓</span><span>Direct contact via Create Vyral team</span></div>
+      </div>
+      <button id="finishAuthBtn" onclick="finishAuth()">Browse Creators Now →</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+     CREATOR DETAIL MODAL
+     ════════════════════════════════════════════ -->
+<div class="modal-overlay" id="creatorDetailModal">
+  <div class="cdm-box">
+
+    <div class="cdm-header">
+      <div id="cdm-avatar">KS</div>
+      <div class="cdm-title-block">
+        <div class="cdm-name-row">
+          <span id="cdm-name">Creator Name</span>
+          <span id="cdm-tier" style="font-size:12px;font-weight:700">🚀 PRO</span>
+          <span id="cdm-niche">Tech</span>
+        </div>
+        <div class="cdm-meta-row">
+          <span id="cdm-handle" style="color:var(--text-dimmer)">@handle</span>
+          <span>·</span>
+          <span id="cdm-location">Chennai, Tamil Nadu</span>
+          <span>·</span>
+          <span id="cdm-language">Tamil</span>
+        </div>
+        <div style="margin-top:6px">
+          <span id="cdm-joined" class="mono" style="font-size:10px;color:var(--text-dimmer)"></span>
+        </div>
+      </div>
+      <button class="cdm-close" onclick="closeCreatorDetail()">✕</button>
+    </div>
+
+    <div class="cdm-body">
+
+      <!-- Bio -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">About</div>
+        <p class="cdm-bio" id="cdm-bio"></p>
+        <div class="cdm-info-chips" style="margin-top:12px">
+          <span class="cdm-info-chip">🎨 <span id="cdm-style"></span></span>
+          <span class="cdm-info-chip">⚡ Response: <span id="cdm-response"></span></span>
+        </div>
+      </div>
+
+      <!-- Platform Stats -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">Platform Performance</div>
+        <div id="cdm-platform-stats"></div>
+      </div>
+
+      <!-- Meta Verified Analytics -->
+      <div class="cdm-section" id="cdm-meta-analytics" style="display:none;padding-bottom:0;"></div>
+
+      <!-- Audience -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">Audience Insights</div>
+        <div id="cdm-audience"></div>
+      </div>
+
+      <!-- Rate Card -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">Rate Card</div>
+        <div id="cdm-rates"></div>
+      </div>
+
+      <!-- Past Brands -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">Past Brand Collaborations</div>
+        <div id="cdm-brands" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+        <div id="cdm-deals-count" class="cdm-deals-count"></div>
+      </div>
+
+      <!-- Sample Content Topics -->
+      <div class="cdm-section">
+        <div class="cdm-section-title">Sample Content Topics</div>
+        <div id="cdm-topics"></div>
+      </div>
+
+      <!-- Contact CTA -->
+      <button class="cdm-contact-btn" onclick="alert('Our team will reach out to you within 24h to connect you with this creator. Email: createvyral@gmail.com')">
+        📩 Connect with this Creator via Create Vyral
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<script src="brand.js"></script>
+</body>
+</html>
